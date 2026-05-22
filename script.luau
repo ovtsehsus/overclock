@@ -15,12 +15,12 @@ if scrIpt ~= nil then
 	local Window = GUI:Window("Overclock")
 	Window.tabs[8].Text = "Universal"
 	local Main = Window:Section(8)
-	local btn1 = Main:AddElement("Button", "Remove lags")
+	local button_sM_i1 = Main:AddElement("Button", "Remove lags")
 	local Credits = Window:Section(8, "Credits")
 	Credits:AddElement("Label", "Discord", DISCORD)
 	Window.event_TabChanged:Connect(function(tabOrder)
 		if tabOrder == 8 then
-			Main:GetElement(btn1).MouseButton1Down:Connect(function()
+			Main:GetElement(button_sM_i1).MouseButton1Down:Connect(function()
 				for _, descendant in game:GetDescendants() do
 					if descendant:IsA("BasePart") then
 						descendant.Material = Enum.Material.SmoothPlastic
