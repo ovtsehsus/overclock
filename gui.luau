@@ -1562,6 +1562,7 @@ end
 
 function GUI:Destroy()
 	self.instance:Destroy()
+	self.hacked = nil
 end
 
 function Window:Destroy()
