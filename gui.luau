@@ -1400,7 +1400,7 @@ function GUI:Window(title) -- TODO: Window
 			new.tabs[tab.LayoutOrder] = tab
 			tab.MouseButton1Down:Connect(function()
 				if tab.LayoutOrder == new._currentTab then return end
-				new:LoadTab(tab.LayoutOrder)
+				new:loadTab(tab.LayoutOrder)
 			end)
 		end
 	end
