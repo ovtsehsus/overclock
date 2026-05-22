@@ -3,7 +3,6 @@ local DISCORD = "https://discord.gg/rdw5afp3UX"
 
 local V = "0.3.9"
 
-task.wait(3)
 local viewportSize = workspace.CurrentCamera.ViewportSize
 print(viewportSize)
 
@@ -1521,6 +1520,7 @@ function Window:Section(tabOrder, text)
 		new:AddElement("Text", text)
 	end
 	self._sections[tabOrder] = new
+	print(new)
 	return new
 end
 
