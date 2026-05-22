@@ -1515,9 +1515,10 @@ function Window:loadTab(tabOrder)
 	self.instance["TabChanged"]:Fire(tabOrder)
 	swapFGToBGColor3(self.tabs[tabOrder])
 	if self._sections[tabOrder][1] == nil then return end
-	for _, v in self._sections[tabOrder] do
+	for il1, v in self._sections[tabOrder] do
 		local section = createSection()
-		for i, element in v._elements do
+		section.Name = tostring(il1)
+		for il2, element in v._elements do
 			local createFunction = elementTypes[element[1]]
 			if createFunction == nil then continue end
 			local instance, valueInstance, value_i = createFunction(table.unpack(element, 2))
@@ -1527,15 +1528,15 @@ function Window:loadTab(tabOrder)
 				end)
 				element[value_i] = valueInstance.Value
 			end
-			instance.Name = tostring(i)
+			instance.Name = tostring(il2)
 			instance.Parent = section
 		end
 		for k, iR in v._groups do
 			local iR_k, name = k:match("([^,]+),(.*)")
 			local group = createGroup(name)
 			group.Name = iR_k
-			for i = iR.Min, iR.Max do
-				local element = section[i]
+			for il2 = iR.Min, iR.Max do
+				local element = section[il2]
 				local childOrChildren, numberOf = getChildrenNotIsA(element.Frame, "UILayout")
 				if numberOf > 1 then
 					local frame = Instance.new("Frame")
@@ -1593,7 +1594,6 @@ end
 
 function Section:GetElement(element_i)
 	local iR_k = self:Element_isInGroup(element_i)
-	print(dir(self), self.instance, element_i)
 	local children = getChildrenNotIsA(self.instance[element_i].Frame, "UILayout")
 	if iR_k ~= nil then
 		local i2t1 = {}
