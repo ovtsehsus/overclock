@@ -1,9 +1,11 @@
 
 local DISCORD = "https://discord.gg/rdw5afp3UX"
 
-local V = "0.3.8"
+local V = "0.3.9"
 
+task.wait(3)
 local viewportSize = workspace.CurrentCamera.ViewportSize
+print(viewportSize)
 
 --\ Configuration
 local minWindowSize = UDim2.fromOffset(450, 575)
@@ -566,7 +568,7 @@ local function createGroup(name)
 	return group
 end
 
-local elementTypes = { -- TODO: Типы элементов
+local elementTypes = { -- TODO: РўРёРїС‹ СЌР»РµРјРµРЅС‚РѕРІ
 	["Text"] = function(text) -- section title
 		local textLabel = Instance.new("TextLabel")
 		textLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -951,7 +953,7 @@ local elementTypes = { -- TODO: Типы элементов
 		textButton.Position = UDim2.new(0.6, -30, 0, 0)
 		textButton.Size = UDim2.fromOffset(25, 25)
 		textButton.Font = 2
-		textButton.Text = "?"
+		textButton.Text = "КЊ"
 		textButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 		textButton.TextSize = 16
 		textButton.Parent = frame
@@ -1124,7 +1126,7 @@ local elementTypes = { -- TODO: Типы элементов
 		return colorSwatch, color3VI, 4
 	end,
 --	["Choice"] = function() -- string r
-		-- пример: Players | (<) ovtsehsus (>)
+		-- РїСЂРёРјРµСЂ: Players | (<) ovtsehsus (>)
 --	end
 }
 --/ TODO: UI 1/1
@@ -1168,7 +1170,7 @@ local function deepClone(arg1t)
 	return i1t1
 end -- DeepSeek
 
---\ Перетаскивание & Масштабирование
+--\ РџРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ & РњР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёРµ
 local function makeDraggable(
 	object: GuiObject,
 	dragger: GuiObject,
@@ -1307,7 +1309,7 @@ local function makeResizable(scrollingFrame, -- nested args
 			XSize = floor(XSize/gridCellSize) * gridCellSize
 			YSize = floor(YSize/gridCellSize) * gridCellSize
 		end
-
+		
 		local newObjectSize = UDim2.new(
 			0, clamp(XSize, minXSize, maxXSize),
 			0, clamp(YSize, minYSize, maxYSize)
