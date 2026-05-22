@@ -1,11 +1,10 @@
 
 DISCORD = "https://discord.gg/rdw5afp3UX"
 
-local V = "0.3.9"
+local V = "0.3.8"
 
 task.wait(1)
 local viewportSize = workspace.CurrentCamera.ViewportSize
-print(viewportSize)
 
 --\ Configuration
 local minWindowSize = UDim2.fromOffset(450, 575)
@@ -55,7 +54,7 @@ local function slider(mover: GuiButton, callback, Xax, Yax, options)
 
 		local xOffset = (mouseLocation.X - backAP.X) / backAS.X - mover.Position.X.Scale
 		local yOffset = (mouseLocation.Y - backAP.Y) / backAS.Y - mover.Position.Y.Scale
-		
+
 		local function set(X, Y)
 			callback(X or 0, Y or 0)
 			local v3 = UDim2.fromScale(X or 0.5, Y or 0.5)
@@ -89,7 +88,7 @@ local function slider(mover: GuiButton, callback, Xax, Yax, options)
 			end
 			return X, Y
 		end
-		
+
 		if andRisesInstantly then
 			if defaultX == nil and defaultY == nil then
 				set(XY())
@@ -103,9 +102,9 @@ local function slider(mover: GuiButton, callback, Xax, Yax, options)
 			end
 		end
 	end
-	
+
 	mouseDowned(true)
-	
+
 	return mover.MouseButton1Down:Connect(function()
 		isButton1Down = true
 
@@ -116,7 +115,7 @@ local function slider(mover: GuiButton, callback, Xax, Yax, options)
 				isButton1Down = false
 			end
 		end)
-		
+
 		mouseDowned()
 	end)
 end
@@ -587,8 +586,10 @@ local elementTypes = { -- TODO: Типы элементов
 		textLabel.TextSize = 16
 		return textLabel
 	end,
-	
+
 	["Label"] = function(key, value) -- string r
+		value = value or ""
+		
 		local label = Instance.new("Frame")
 		local UIPadding = Instance.new("UIPadding")
 		local textLabel = Instance.new("TextLabel")
@@ -640,14 +641,20 @@ local elementTypes = { -- TODO: Типы элементов
 		textBox.FontFace = fontFaces["Comic Neue Angular Bold"]
 		textBox.PlaceholderColor3 = Color3.fromRGB(0, 0, 0)
 		textBox.PlaceholderText = "String"
-		textBox.Text = value or ""
+		textBox.Text = value
 		textBox.TextColor3 = Color3.fromRGB(0, 0, 0)
 		textBox.TextSize = 16
 		textBox.Parent = frame
 
 		UICorner.CornerRadius = UDim.new(0.2, 0)
 		UICorner.Parent = textBox
-
+		
+		--\
+		textBox:GetPropertyChangedSignal("Text"):Connect(function()
+			textBox.Text = value
+		end)
+		--/
+		
 		return label
 	end,
 	["Button"] = function(key, value) -- signal
@@ -690,7 +697,7 @@ local elementTypes = { -- TODO: Типы элементов
 		frame.Position = UDim2.fromScale(0.5, 0)
 		frame.Size = UDim2.new(0.5, -5, 0, 25)
 		frame.Parent = button
-		
+
 		textButton.AutoButtonColor = false
 		textButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		textButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -768,7 +775,7 @@ local elementTypes = { -- TODO: Типы элементов
 		UIStroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
 		UIStroke.Thickness = 0.1
 		UIStroke.Parent = frame_2
-		
+
 		textButton.AutoButtonColor = false
 		textButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		textButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -783,11 +790,11 @@ local elementTypes = { -- TODO: Типы элементов
 
 		UICorner_2.CornerRadius = UDim.new(0.2, 0)
 		UICorner_2.Parent = textButton
-		
+
 		--\
 		local boolVI = Instance.new("BoolValue", switch)
 		boolVI.Value = default or boolVI.Value
-		
+
 		local function update()
 			if boolVI.Value then
 				frame_2.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
@@ -795,15 +802,15 @@ local elementTypes = { -- TODO: Типы элементов
 				frame_2.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 			end
 		end
-		
+
 		textButton.MouseButton1Down:Connect(function()
 			boolVI.Value = not boolVI.Value
 			update()
 		end)
-		
+
 		update()
 		--/
-		
+
 		return switch, boolVI, 4
 	end,
 	["Slider"] = function(key, steps, default, offset) -- float
@@ -1000,17 +1007,17 @@ local elementTypes = { -- TODO: Типы элементов
 
 		UICorner_3.CornerRadius = UDim.new(0.2, 0)
 		UICorner_3.Parent = textBox
-		
+
 		--\
 		offset = offset or 1
-		
+
 		local intVI = Instance.new("IntValue", counter)
 		intVI.Value = default or intVI.Value
-		
+
 		local function update()
 			textBox.Text = tostring(intVI.Value)
 		end
-		
+
 		textBox.FocusLost:Connect(function(enterPressed)
 			local newValue = tonumber(textBox.Text)
 			if newValue ~= nil then
@@ -1018,26 +1025,26 @@ local elementTypes = { -- TODO: Типы элементов
 			end
 			update()
 		end)
-		
+
 		textButton.MouseButton1Down:Connect(function()
 			intVI.Value += offset
 			update()
 		end)
-		
+
 		textButton_2.MouseButton1Down:Connect(function()
 			intVI.Value -= offset
 			update()
 		end)
-		
+
 		update()
 		--/
 
 		return counter, intVI, 3
 	end,
---	["ColorPicker"] = function() -- color3
-		
---	end,
-	
+	--	["ColorPicker"] = function() -- color3
+
+	--	end,
+
 	["ColorSwatch"] = function(key, colors, default) -- color3
 		local colorSwatch = Instance.new("Frame")
 		local UIPadding = Instance.new("UIPadding")
@@ -1086,7 +1093,7 @@ local elementTypes = { -- TODO: Типы элементов
 		UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
 		UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 		UIListLayout.Parent = frame
-		
+
 		local function createButton()
 			local textButton = Instance.new("TextButton")
 			local UICorner = Instance.new("UICorner")
@@ -1111,11 +1118,11 @@ local elementTypes = { -- TODO: Типы элементов
 
 			return textButton
 		end
-		
+
 		--\
 		local color3VI = Instance.new("Color3Value", colorSwatch)
 		color3VI.Value = default or color3VI.Value
-		
+
 		for _, color3 in colors or {color3VI.Value} do
 			local textButton = createButton()
 			textButton.BackgroundColor3 = color3
@@ -1128,10 +1135,38 @@ local elementTypes = { -- TODO: Типы элементов
 
 		return colorSwatch, color3VI, 4
 	end,
---	["Choice"] = function() -- string r
-		-- пример: Players | (<) ovtsehsus (>)
---	end
+	--	["Choice"] = function() -- string r
+	-- пример: Players | (<) ovtsehsus (>)
+	--	end
 }
+
+local function createOpenGUIButton()
+	local textButton = Instance.new("TextButton")
+	local textButton_2 = Instance.new("TextButton")
+
+	textButton.AutoButtonColor = false
+	textButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	textButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	textButton.BorderSizePixel = 0
+	textButton.Size = UDim2.fromOffset(80, 20)
+	textButton.FontFace = fontFaces["Comic Neue Angular Regular"]
+	textButton.Text = "Open GUI"
+	textButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+	textButton.TextSize = 20
+	textButton.Visible = false
+	
+	textButton_2.AutoButtonColor = false
+	textButton_2.AnchorPoint = Vector2.new(0, 0.5)
+	textButton_2.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	textButton_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	textButton_2.BorderSizePixel = 0
+	textButton_2.Position = UDim2.new(1, 20, 0.5, 0)
+	textButton_2.Size = UDim2.fromOffset(20, 20)
+	textButton_2.Text = ""
+	textButton_2.Parent = textButton
+
+	return textButton
+end
 --/ TODO: UI 1/1
 
 local GUI = {
@@ -1144,19 +1179,19 @@ local Window = {
 	tabs = {},
 	_currentTab = nil,
 	_sections = { 
---	[tabOrder] = {
---		[I] = Section._elements
---	}
+		--	[tabOrder] = {
+		--		[I] = Section
+		--	}
 	}
 }
 
 local Section = {
 	instance = nil,
 	_elements = {
---	[element_i] = {elementType, ...:args}
+		--	[element_i] = {elementType, ...:args}
 	},
 	_groups = {
---	[iR_k] = NumberRange
+		--	[iR_k] = NumberRange
 	}
 }
 -- iR_k: index range key
@@ -1312,7 +1347,7 @@ local function makeResizable(scrollingFrame, -- nested args
 			XSize = floor(XSize/gridCellSize) * gridCellSize
 			YSize = floor(YSize/gridCellSize) * gridCellSize
 		end
-		
+
 		local newObjectSize = UDim2.new(
 			0, clamp(XSize, minXSize, maxXSize),
 			0, clamp(YSize, minYSize, maxYSize)
@@ -1343,11 +1378,11 @@ local function makeResizable(scrollingFrame, -- nested args
 		end
 		--/
 	end
-	
+
 	resizer.MouseButton1Down:Connect(function()
 		dragStartPosition = Vector3.new(mouse.X, mouse.Y, 0)
 		objectStartSize = object.Size
-			
+
 		local connection
 		connection = UserInputService.InputEnded:Connect(function(inputObject)
 			if inputObject.UserInputState == Enum.UserInputState.End then
@@ -1355,10 +1390,10 @@ local function makeResizable(scrollingFrame, -- nested args
 				drag = false
 			end
 		end)
-		
+
 		drag = true
 	end)
-	
+
 	UserInputService.InputChanged:Connect(function(inputObject)
 		if drag and (inputObject.UserInputType == Enum.UserInputType.MouseMovement
 			or inputObject.UserInputType == Enum.UserInputType.Touch)
@@ -1383,36 +1418,49 @@ function GUI:Window(title) -- TODO: Window
 	makeDraggable(window, window.Top)
 	makeResizable(window.Frame.ScrollingFrame, window, window.Bottom.Resizer, 450, 575, maxWindowSizeX, maxWindowSizeY)
 	
+	local textButton = createOpenGUIButton()
+	textButton.MouseButton1Down:Connect(function()
+		textButton.Visible = false
+		ContextActionService:UnbindAction(self.instance.Name)
+		window.Visible = true
+	end)
+	textButton.Position = UDim2.fromOffset(maxWindowSizeX * math.random(2, 8)/10, maxWindowSizeY * math.random(2, 8)/10)
+	makeDraggable(textButton, textButton.TextButton)
+	textButton.Parent = self.instance -- .Ignore
+
 	window.Top.Frame.Hide.MouseButton1Down:Connect(function()
 		window.Visible = false
+		textButton.Visible = true
 		ContextActionService:BindAction(self.instance.Name, function(actionName, inputState)
 			if inputState == Enum.UserInputState.Begin then
-				window.Visible = true
 				ContextActionService:UnbindAction(actionName)
+				textButton.Visible = false
+				window.Visible = true
 			end
 		end, true)
-		ContextActionService:SetTitle(self.instance.Name, "Show GUI")
+		ContextActionService:SetTitle(self.instance.Name, "Open GUI")
 	end)
 
 	window.Top.Frame.Close.MouseButton1Down:Connect(function()
 		self:Destroy()
 	end)
-	
+
 	for _, tab in window.Frame.Tabs:GetChildren() do
 		if tab.ClassName == "TextButton" then
 			new.tabs[tab.LayoutOrder] = tab
+			new._sections[tab.LayoutOrder] = {}
 			tab.MouseButton1Down:Connect(function()
 				if tab.LayoutOrder == new._currentTab then return end
 				new:loadTab(tab.LayoutOrder)
 			end)
 		end
 	end
-	
+
 	local bindableEvent = Instance.new("BindableEvent", new.instance)
 	bindableEvent.Name = "TabChanged"
-	
+
 	new.event_TabChanged = bindableEvent.Event
-	
+
 	--\ TODO: Settings
 	local Settings = new:Section(10)
 	--code
@@ -1466,55 +1514,57 @@ function Window:loadTab(tabOrder)
 	self._currentTab = tabOrder
 	self.instance["TabChanged"]:Fire(tabOrder)
 	swapFGToBGColor3(self.tabs[tabOrder])
-	if self._sections[tabOrder] == nil then return end
-	local section = createSection()
-	for i, element in self._sections[tabOrder]._elements do
-		local createFunction = elementTypes[element[1]]
-		if createFunction == nil then continue end
-		local instance, valueInstance, value_i = createFunction(table.unpack(element, 2))
-		if valueInstance ~= nil then
-			valueInstance.Changed:Connect(function(newValue)
-				element[value_i] = newValue
-			end)
-			element[value_i] = valueInstance.Value
-		end
-		instance.Name = tostring(i)
-		instance.Parent = section
-	end
-	for k, iR in self._sections[tabOrder]._groups do
-		local iR_k, name = k:match("([^,]+),(.*)")
-		local group = createGroup(name)
-		group.Name = iR_k
-		for i = iR.Min, iR.Max do
-			local element = section[i]
-			local childOrChildren, numberOf = getChildrenNotIsA(element.Frame, "UILayout")
-			if numberOf > 1 then
-				local frame = Instance.new("Frame")
-				frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				frame.BackgroundTransparency = 1
-				frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-				frame.BorderSizePixel = 0
-				frame.Size = UDim2.new(1, 0, 0, 25)
-				for _, child in childOrChildren do
-					local objectVI = Instance.new("ObjectValue", child.Parent)
-					objectVI.Name = child.Name
-					objectVI.Value = child
-					child.Parent = frame
-				end
-				frame.Parent = group.Frame
-			else
-				local objectVI = Instance.new("ObjectValue", childOrChildren[1].Parent)
-				objectVI.Name = childOrChildren[1].Name
-				objectVI.Value = childOrChildren[1]
-				childOrChildren[1].Parent = group.Frame
+	if self._sections[tabOrder][1] == nil then return end
+	for _, v in self._sections[tabOrder] do
+		local section = createSection()
+		for i, element in v._elements do
+			local createFunction = elementTypes[element[1]]
+			if createFunction == nil then continue end
+			local instance, valueInstance, value_i = createFunction(table.unpack(element, 2))
+			if valueInstance ~= nil then
+				valueInstance.Changed:Connect(function(newValue)
+					element[value_i] = newValue
+				end)
+				element[value_i] = valueInstance.Value
 			end
-			element.Visible = false
-			--element:Destroy()
+			instance.Name = tostring(i)
+			instance.Parent = section
 		end
-		group.Parent = section
+		for k, iR in v._groups do
+			local iR_k, name = k:match("([^,]+),(.*)")
+			local group = createGroup(name)
+			group.Name = iR_k
+			for i = iR.Min, iR.Max do
+				local element = section[i]
+				local childOrChildren, numberOf = getChildrenNotIsA(element.Frame, "UILayout")
+				if numberOf > 1 then
+					local frame = Instance.new("Frame")
+					frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+					frame.BackgroundTransparency = 1
+					frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+					frame.BorderSizePixel = 0
+					frame.Size = UDim2.new(1, 0, 0, 25)
+					for _, child in childOrChildren do
+						local objectVI = Instance.new("ObjectValue", child.Parent)
+						objectVI.Name = child.Name
+						objectVI.Value = child
+						child.Parent = frame
+					end
+					frame.Parent = group.Frame
+				else
+					local objectVI = Instance.new("ObjectValue", childOrChildren[1].Parent)
+					objectVI.Name = childOrChildren[1].Name
+					objectVI.Value = childOrChildren[1]
+					childOrChildren[1].Parent = group.Frame
+				end
+				element.Visible = false
+				--element:Destroy()
+			end
+			group.Parent = section
+		end
+		section.Parent = self.instance.Frame.ScrollingFrame
+		v.instance = section
 	end
-	section.Parent = self.instance.Frame.ScrollingFrame
-	self._sections[tabOrder].instance = section
 end
 
 function Window:Section(tabOrder, text)
@@ -1523,7 +1573,7 @@ function Window:Section(tabOrder, text)
 	if text ~= nil then
 		new:AddElement("Text", text)
 	end
-	self._sections[tabOrder] = new
+	table.insert(self._sections[tabOrder], new)
 	return new
 end
 
