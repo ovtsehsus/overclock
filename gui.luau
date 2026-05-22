@@ -1,8 +1,9 @@
 
-local DISCORD = "https://discord.gg/rdw5afp3UX"
+DISCORD = "https://discord.gg/rdw5afp3UX"
 
 local V = "0.3.9"
 
+task.wait(3)
 local viewportSize = workspace.CurrentCamera.ViewportSize
 print(viewportSize)
 
@@ -1444,7 +1445,7 @@ local function getChildrenNotIsA(parent, isA)
 	return i1t1, i1n1
 end
 
-function Window:LoadTab(tabOrder)
+function Window:loadTab(tabOrder)
 	tabOrder = tabOrder or self._currentTab
 	if self._currentTab == nil then
 		tabOrder = tabOrder or 0
@@ -1514,13 +1515,12 @@ function Window:LoadTab(tabOrder)
 end
 
 function Window:Section(tabOrder, text)
-	if tabOrder == 10 or tabOrder == 8 then return end
+	--if tabOrder == 10 or tabOrder == 8 then return end
 	local new = deepClone(Section)
 	if text ~= nil then
 		new:AddElement("Text", text)
 	end
 	self._sections[tabOrder] = new
-	print(new)
 	return new
 end
 
@@ -1562,7 +1562,7 @@ end
 
 function GUI:Destroy()
 	self.instance:Destroy()
-	self.hacked = nil
+	_G.hacked = nil
 end
 
 function Window:Destroy()
