@@ -3,15 +3,18 @@ DISCORD = "https://discord.gg/rdw5afp3UX"
 
 local V = "0.3.9"
 
-task.wait(3)
+task.wait(1)
 local viewportSize = workspace.CurrentCamera.ViewportSize
 print(viewportSize)
 
 --\ Configuration
 local minWindowSize = UDim2.fromOffset(450, 575)
-local maxWindowSizeX = 1100
-local maxWindowSizeY = (minWindowSize.Y.Offset + viewportSize.Y - minWindowSize.Y.Offset) - 250 -- with bound offset
+local maxWindowSizeX = viewportSize.X
+local maxWindowSizeY = viewportSize.Y
 --/
+
+print(minWindowSize.X, maxWindowSizeX)
+print(minWindowSize.Y, maxWindowSizeY)
 
 local wait = task.wait
 local clamp = math.clamp
