@@ -1510,11 +1510,10 @@ function Window:loadTab(tabOrder)
 		end
 		--/
 	end
+	
 	if tabOrder == self._currentTab then return end
-	self._currentTab = tabOrder
-	self.instance["TabChanged"]:Fire(tabOrder)
-	swapFGToBGColor3(self.tabs[tabOrder])
 	if self._sections[tabOrder][1] == nil then return end
+	
 	for il1, v in self._sections[tabOrder] do
 		local section = createSection()
 		section.Name = tostring(il1)
@@ -1566,6 +1565,10 @@ function Window:loadTab(tabOrder)
 		section.Parent = self.instance.Frame.ScrollingFrame
 		v.instance = section
 	end
+	
+	self._currentTab = tabOrder
+	self.instance["TabChanged"]:Fire(tabOrder)
+	swapFGToBGColor3(self.tabs[tabOrder])
 end
 
 function Window:Section(tabOrder, text)
