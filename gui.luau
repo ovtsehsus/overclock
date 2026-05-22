@@ -1593,6 +1593,7 @@ end
 
 function Section:GetElement(element_i)
 	local iR_k = self:Element_isInGroup(element_i)
+	print(dir(self), self.instance, element_i)
 	local children = getChildrenNotIsA(self.instance[element_i].Frame, "UILayout")
 	if iR_k ~= nil then
 		local i2t1 = {}
